@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lumens Required Calculator</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .input-group:focus-within label, .select-group:focus-within label {
+            color: #4f46e5;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 flex items-center justify-center min-h-screen py-12">
+    <div class="w-full max-w-lg mx-auto p-6 md:p-8 bg-white rounded-2xl shadow-lg">
+        <div class="text-center">
+            <!-- Logo Added -->
+            <img src="https://placehold.co/120x50/f3f4f6/4b5563?text=Gravalty+Group" alt="Gravalty Group Logo" class="mx-auto mb-4 h-12"
+                 onerror="this.onerror=null;this.src='https://placehold.co/120x50/e2e8f0/4a5568?text=Logo+Not+Found';">
+            <h1 class="text-2xl md:text-3xl font-bold text-gray-800">Lumens Required Calculator</h1>
+            <p class="text-gray-500 mt-2">Calculate the required lumens per light source.</p>
+        </div>
+
+        <form id="lumenForm" class="mt-8 space-y-6">
+            <!-- Updated Room Type Selector -->
+            <div class="select-group">
+                <label for="roomType" class="block text-sm font-medium text-gray-700 mb-1">Room Type</label>
+                <select id="roomType" name="roomType" class="w-full px-4 py-2 bg-gray-100 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition duration-200">
+                    <option value="custom">-- Select a Room Type --</option>
+                    <option value="general_office">General Office / Workstation Area</option>
+                    <option value="meeting">Meeting Room</option>
+                    <option value="receptionist">Receptionist Area</option>
+                    <option value="hallway">Hallway / Corridor</option>
+                    <option value="stairs">Stairs</option>
+                    <option value="pantry">Pantry</option>
+                    <option value="dining_room">Dining Room / Cafeteria</option>
+                    <option value="toilet">Toilet</option>
+                    <option value="finance">Finance Room</option>
+                    <option value="engineering_office">Engineering Office (Design/CAD)</option>
+                    <option value="engineering_lab">Engineering Lab (Clean)</option>
+                    <option value="engineering_workshop">Engineering Workshop</option>
+                </select>
+            </div>
+
+            <!-- Input fields for the calculator -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="input-group">
+                    <!-- Text Changed -->
+                    <label for="lux" class="block text-sm font-medium text-gray-700 mb-1">Required Lux (lx)</label>
+                    <input type="number" id="lux" name="lux" class="w-full px-4 py-2 bg-gray-100 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition duration-200" placeholder="e.g., 100" required>
+                </div>
+                <div class="input-group">
+                    <label for="area" class="block text-sm font-medium text-gray-700 mb-1">Room Area (m²)</label>
+                    <input type="number" id="area" name="area" class="w-full px-4 py-2 bg-gray-100 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition duration-200" placeholder="e.g., 15" required>
+                </div>
+                <div class="input-group">
+                    <label for="points" class="block text-sm font-medium text-gray-700 mb-1">Number of Light Points</label>
+                    <input type="number" id="points" name="points" class="w-full px-4 py-2 bg-gray-100 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition duration-200" placeholder="e.g., 4" required>
+                </div>
+                <div class="input-group">
+                    <label for="llf" class="block text-sm font-medium text-gray-700 mb-1">Light Loss Factor (LLF)</label>
+                    <input type="number" id="llf" name="llf" step="0.01" min="0" max="1" class="w-full px-4 py-2 bg-gray-100 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition duration-200" placeholder="e.g., 0.8" required>
+                </div>
+                <div class="input-group md:col-span-2">
+                     <label for="uf" class="block text-sm font-medium text-gray-700 mb-1">Utilization Factor (UF)</label>
+                    <input type="number" id="uf" name="uf" step="0.01" min="0" max="1" class="w-full px-4 py-2 bg-gray-100 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition duration-200" placeholder="e.g., 0.6" required>
+                </div>
+            </div>
+
+            <!-- Calculate Button -->
+            <button type="submit" class="w-full bg-indigo-600 text-white font-bold py-3 px-4 rounded-lg hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition duration-300 ease-in-out transform hover:-translate-y-1">
+                Calculate Lumens
+            </button>
+            <!-- Text Added -->
+            <p class="text-center text-xs text-gray-400 mt-2">Property of Gravalty Group</p>
+        </form>
+
+        <!-- Result Display Area -->
+        <div id="result" class="mt-8 text-center hidden p-4 bg-indigo-50 border-2 border-indigo-200 rounded-lg">
+            <p class="text-lg text-gray-600">Required Lumens per Light Point:</p>
+            <p id="lumenValue" class="text-3xl font-bold text-indigo-600 mt-2"></p>
+        </div>
+        
+        <!-- Error Message Box -->
+        <div id="error-box" class="hidden mt-4 p-4 bg-red-100 border border-red-400 text-red-700 rounded-lg text-center">
+            <p id="error-message"></p>
+        </div>
+
+    </div>
+
+    <script>
+    // IIFE to ensure proper script execution and scope, preventing potential parsing errors.
+    (function() {
+        // DOM Element References
+        const lumenForm = document.getElementById('lumenForm');
+        const resultDiv = document.getElementById('result');
+        const lumenValueP = document.getElementById('lumenValue');
+        const errorBox = document.getElementById('error-box');
+        const errorMessage = document.getElementById('error-message');
+        const roomTypeSelect = document.getElementById('roomType');
+        const llfInput = document.getElementById('llf');
+        const ufInput = document.getElementById('uf');
+        const luxInput = document.getElementById('lux');
+
+        // Standard values for different room types
+        const roomTypeStandards = {
+            general_office: { llf: 0.80, uf: 0.65, lux: 500 },
+            meeting: { llf: 0.85, uf: 0.65, lux: 500 },
+            receptionist: { llf: 0.85, uf: 0.60, lux: 300 },
+            hallway: { llf: 0.80, uf: 0.50, lux: 100 },
+            stairs: { llf: 0.80, uf: 0.55, lux: 100 },
+            pantry: { llf: 0.80, uf: 0.60, lux: 200 },
+            dining_room: { llf: 0.80, uf: 0.60, lux: 200 },
+            toilet: { llf: 0.80, uf: 0.55, lux: 200 },
+            finance: { llf: 0.85, uf: 0.65, lux: 500 },
+            engineering_office: { llf: 0.85, uf: 0.70, lux: 750 },
+            engineering_lab: { llf: 0.85, uf: 0.70, lux: 750 },
+            engineering_workshop: { llf: 0.75, uf: 0.60, lux: 500 },
+            custom: { llf: '', uf: '', lux: '' }
+        };
+
+        /**
+         * Event listener for the room type dropdown.
+         * Populates the Lux, LLF, and UF fields based on the selected room type.
+         */
+        roomTypeSelect.addEventListener('change', function(e) {
+            const selectedType = e.target.value;
+            if (roomTypeStandards[selectedType]) {
+                luxInput.value = roomTypeStandards[selectedType].lux;
+                llfInput.value = roomTypeStandards[selectedType].llf;
+                ufInput.value = roomTypeStandards[selectedType].uf;
+            }
+        });
+
+        /**
+         * Handles the form submission event.
+         * Prevents the default form submission, retrieves input values,
+         * performs the calculation, and displays the result or an error.
+         * @param {Event} e - The form submission event.
+         */
+        lumenForm.addEventListener('submit', function(e) {
+            e.preventDefault(); // Prevent page reload
+
+            // Hide previous results and errors
+            resultDiv.classList.add('hidden');
+            errorBox.classList.add('hidden');
+
+            // Get values from the input fields and convert them to numbers
+            const lux = parseFloat(luxInput.value);
+            const area = parseFloat(document.getElementById('area').value);
+            const points = parseInt(document.getElementById('points').value, 10);
+            const llf = parseFloat(llfInput.value);
+            const uf = parseFloat(ufInput.value);
+
+            // --- Input Validation ---
+            if (isNaN(lux) || isNaN(area) || isNaN(points) || isNaN(llf) || isNaN(uf)) {
+                showError("Please fill in all fields with valid numbers.");
+                return;
+            }
+            if (lux <= 0 || area <= 0 || points <= 0) {
+                showError("Lux, Area, and Number of Light Points must be positive values.");
+                return;
+            }
+            if (llf <= 0 || llf > 1 || uf <= 0 || uf > 1) {
+                showError("LLF and UF must be between 0 and 1.");
+                return;
+            }
+            
+            // --- Calculation ---
+            // Formula: Lumens per Lamp = (Lux * Area) / (Number of Lamps * UF * LLF)
+            const denominator = points * uf * llf;
+            
+            if (denominator === 0) {
+                showError("The combination of factors results in a division by zero. Please check your inputs.");
+                return;
+            }
+            
+            const lumensPerLamp = (lux * area) / denominator;
+
+            // Display the result
+            lumenValueP.textContent = `${lumensPerLamp.toFixed(2)} lm`;
+            resultDiv.classList.remove('hidden');
+        });
+
+        /**
+         * Displays an error message in the designated error box.
+         * @param {string} message - The error message to display.
+         */
+        function showError(message) {
+            errorMessage.textContent = message;
+            errorBox.classList.remove('hidden');
+        }
+    })();
+    </script>
+</body>
+</html>
